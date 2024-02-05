@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>偉泰龍年幸運大抽獎</title>
+
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f1c3b9;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: #8b0000;
+        }
+
+        #result {
+            font-size: 88px;
+            text-align: center;
+            margin-bottom: 20px;
+            background-color: #e9967a;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #oldResults {
+            font-size: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            background-color: #e9967a;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            font-size: 24px;
+            padding: 10px 20px;
+            background-color: #ffcc00;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #ffd700;
+        }
+
+        img {
+            width: 200px;
+            height: auto;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>偉泰龍年幸運大抽獎</h1>
+
+    <div id="result"></div>
+    <button onclick="generateResult()">抽獎</button>
+
+    <div id="oldResults"></div>
+
+    <script>
+        const generatedResults = new Set();
+        let firstRandomSeat1;
+        let firstRandomSeat2;
+
+        function generateResult() {
+            const resultDiv = document.getElementById("result");
+            const oldResultsDiv = document.getElementById("oldResults");
+
+            // Generate the first two random seat numbers
+            if (!firstRandomSeat1 || !firstRandomSeat2 || firstRandomSeat1 === firstRandomSeat2) {
+                firstRandomSeat1 = generateRandomSeat();
+                do {
+                    firstRandomSeat2 = generateRandomSeat();
+                } while (firstRandomSeat1 === firstRandomSeat2);
+                resultDiv.innerHTML = "<p style='font-size: 88px;'>" + firstRandomSeat1 + "號, " + firstRandomSeat2 + "號</p>";
+                return;
+            }
+
+            // Generate and check for repetition
+            let result;
+            do {
+                // Generate a random group number
+                const group = Math.floor(Math.random() * 13) + 1;
+
+                // Generate a random seat number (excluding the first two random seat numbers)
+                let seat;
+                do {
+                    seat = generateRandomSeat();
+                } while (seat === firstRandomSeat1 || seat === firstRandomSeat2);
+
+                // Create the result string
+                result = "第" + group + "圍" + seat + "號";
+            } while (generatedResults.has(result));
+
+            generatedResults.add(result);
+
+            // showing the current result
+            resultDiv.innerHTML = "<p style='font-size: 88px;'>" + result + "</p>";
+
+            // showing old results
+            const oldResultsText = Array.from(generatedResults).join(', ');
+            oldResultsDiv.innerHTML = "<p>得獎者: " + oldResultsText + "</p>";
+        }
+
+        function generateRandomSeat() {
+            return Math.floor(Math.random() * 12) + 1;
+        }
+    </script>
+</body>
+
+</html>
